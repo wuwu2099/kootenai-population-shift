@@ -1,0 +1,28 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# Environments
+.env/
+venv/
+.env.*
+
+# Jupyter
+.ipynb_checkpoints/
+
+# GIS / GeoPandas temporary files
+*.cpg
+*.shx
+*.dbf
+*.prj
+*.sbn
+*.sbx
+
+# Large outputs (optional but recommended)
+results/figures/*.png
+results/figures/*.jpg
+
+# OS files
+.DS_Store
+Thumbs.db
