@@ -6,14 +6,13 @@ COUNTY = "055"
 API_KEY = "your_api_key"  
 
 
-
+# Auto fetch census population data using api 
 def fetch_to_df(url, year, source, value_col, api_key=None):
     if api_key:
         separator = "&" if "?" in url else "?"
         url += f"{separator}key={api_key}"
 
     r = requests.get(url)
-
     print(f"\n[{year}] STATUS:", r.status_code)
 
     if r.status_code != 200:
@@ -36,11 +35,9 @@ def fetch_to_df(url, year, source, value_col, api_key=None):
     + df["tract"].astype(str).str.zfill(6)
     )
 
-    # standardize schema (IMPORTANT)
+    # standardize schema 
     df = df[["GEOID", "NAME", value_col, "state", "county", "tract"]]
-
     df = df.rename(columns={value_col: "population"})
-
     df["year"] = year
     df["source"] = source
 
@@ -48,7 +45,7 @@ def fetch_to_df(url, year, source, value_col, api_key=None):
 
 
 # ----------------------------
-# RAW DATA COLLECTION
+# Raw Data Collection
 # ----------------------------
 
 dfs = []
@@ -58,8 +55,7 @@ dfs.append(fetch_to_df(
     "https://api.census.gov/data/2000/dec/sf1"
     "?get=P001001,NAME"
     f"&for=tract:*&in=state:{STATE}%20county:{COUNTY}",
-    2000, "dec_sf1", "P001001",
-    API_KEY
+    2000, "dec_sf1", "P001001", API_KEY
 ))
 
 # 2010
@@ -67,8 +63,7 @@ dfs.append(fetch_to_df(
     "https://api.census.gov/data/2010/dec/sf1"
     "?get=P001001,NAME"
     f"&for=tract:*&in=state:{STATE}%20county:{COUNTY}",
-    2010, "dec_sf1", "P001001",
-    API_KEY
+    2010, "dec_sf1", "P001001", API_KEY
 ))
 
 # 2015 ACS
@@ -76,8 +71,7 @@ dfs.append(fetch_to_df(
     "https://api.census.gov/data/2015/acs/acs5"
     "?get=B01003_001E,NAME"
     f"&for=tract:*&in=state:{STATE}%20county:{COUNTY}",
-    2015, "acs5_2015", "B01003_001E",
-    API_KEY
+    2015, "acs5_2015", "B01003_001E", API_KEY
 ))
 
 # 2020
@@ -85,8 +79,7 @@ dfs.append(fetch_to_df(
     "https://api.census.gov/data/2020/dec/pl"
     "?get=P1_001N,NAME"
     f"&for=tract:*&in=state:{STATE}%20county:{COUNTY}",
-    2020, "dec_pl", "P1_001N",
-    API_KEY
+    2020, "dec_pl", "P1_001N", API_KEY
 ))
 
 # 2024 ACS
@@ -98,9 +91,9 @@ dfs.append(fetch_to_df(
 ))
 
 
-# ----------------------------
-# FINAL RAW TABLE (NO MERGING)
-# ----------------------------
+# -------------------------------
+# Final Data Table (No Merging)
+# -------------------------------
 df_raw = pd.concat([d for d in dfs if d is not None], ignore_index=True)
 
 # convert population to numeric
