@@ -6,9 +6,8 @@ import matplotlib.pyplot as plt
 import pandas as pd 
 
 
-pop_df = pd.read_csv(
-    "../data/raw/kootenai_tract_population_2000_2024.csv"
-)
+# Read population data 
+pop_df = pd.read_csv("../data/raw/kootenai_tract_population_2000_2024.csv")
 pop_df["GEOID"] = pop_df["GEOID"].astype(str).str.zfill(11)
 
 
@@ -24,7 +23,6 @@ def download_shapefile(year, zip_path):
         print(f"{year} downloaded successfully")
     else:
         print(f"{year} FAILED: {r.status_code}")
-
 
 
 # Extract census tract data
@@ -53,7 +51,6 @@ def filter_county(gdf):
     elif "COUNTY" in gdf.columns:
         gdf = gdf[gdf["COUNTY"] == "055"]
     return gdf 
-
 
 
 # Create GEOID if it does not exist
@@ -122,13 +119,11 @@ for year in years:
     extract_path = extract_dir / f"tract_{year}"
     extract_path.mkdir(parents=True, exist_ok=True)
 
-    #download_shapefile(year, zip_path)
-    #extract_shapefile(year, extract_path, zip_path)
+    download_shapefile(year, zip_path)
+    extract_shapefile(year, extract_path, zip_path)
     
-
     # Read Shapefiles
     gdf = find_read_shapefil(year, extract_path)
-
 
     # Filter Kootenai County
     gdf = filter_county(gdf)
@@ -141,7 +136,6 @@ for year in years:
     
     # Add year label to gdf
     gdf["year"] = year
-
 
     # Convert coordinate system
     gdf = convert_coordinate(gdf)
@@ -163,8 +157,8 @@ for year in years:
     print(f"{year} ready: {len(gdf)} tracts")
     print(gdf[["GEOID", "population"]].head())
     
-    #gdf.plot()
-    #plt.show()
+    gdf.plot()
+    plt.show()
 
     output_path = Path(f"../data/processed/population_tracts_{year}.shp")
     gdf.to_file(output_path)

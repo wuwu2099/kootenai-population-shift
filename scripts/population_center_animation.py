@@ -2,9 +2,8 @@ import geopandas as gpd
 import pandas as pd
 from pathlib import Path
 import matplotlib.pyplot as plt
-
-
-
+from PIL import Image
+from pathlib import Path
 
 
 # Calculate population-weighted center
@@ -30,8 +29,6 @@ def calculate_population_center(gdf, year):
     }
     
 
-
-
 # Create point geodataframe from population centers
 def create_pop_center_dataframe(population_centers):
     center_df = pd.DataFrame(population_centers)
@@ -43,10 +40,7 @@ def create_pop_center_dataframe(population_centers):
     return center_gdf
 
 
-#####################################
 # Calculate population ranges
-#####################################
-
 def calculate_population_ranges(gdfs):
 
     yearly_ranges = {}
@@ -54,10 +48,7 @@ def calculate_population_ranges(gdfs):
     global_min = float("inf")
     global_max = float("-inf")
 
-    #################################
     # Calculate yearly ranges
-    #################################
-
     for year, gdf in gdfs.items():
 
         year_min = gdf["population"].min()
@@ -69,46 +60,21 @@ def calculate_population_ranges(gdfs):
             "max_population": year_max
         }
 
-        print(
-            f"{year}: min={year_min}, max={year_max}"
-        )
+        print(f"{year}: min={year_min}, max={year_max}")
 
-        #################################
         # Update global range
-        #################################
-
-        global_min = min(
-            global_min,
-            year_min
-        )
-
-        global_max = max(
-            global_max,
-            year_max
-        )
-
-    #################################
-    # Print global range
-    #################################
+        global_min = min(global_min, year_min)
+        global_max = max(global_max, year_max)
 
     print("\nGLOBAL RANGE")
+    print(f"min={global_min}, max={global_max}")
 
-    print(
-        f"min={global_min}, max={global_max}"
-    )
 
-    #################################
     # Convert to dataframe
-    #################################
+    range_df = pd.DataFrame(yearly_ranges.values())
 
-    range_df = pd.DataFrame(
-        yearly_ranges.values()
-    )
 
-    #################################
     # Add global range row
-    #################################
-
     global_row = pd.DataFrame([{
         "year": "GLOBAL",
         "min_population": global_min,
@@ -120,44 +86,21 @@ def calculate_population_ranges(gdfs):
         ignore_index=True
     )
 
-    #################################
+
     # Save results
-    #################################
+    output_path = Path("../results/population_ranges.csv")
+    output_path.parent.mkdir(parents=True, exist_ok=True)
 
-    output_path = Path(
-        "../results/population_ranges.csv"
-    )
+    range_df.to_csv(output_path, index=False)
 
-    output_path.parent.mkdir(
-        parents=True,
-        exist_ok=True
-    )
+    print("\nPopulation ranges saved!")
+    return (yearly_ranges, global_min, global_max)
 
-    range_df.to_csv(
-        output_path,
-        index=False
-    )
 
-    print(
-        "\nPopulation ranges saved!"
-    )
-
-    return (
-        yearly_ranges,
-        global_min,
-        global_max
-    )
-
-#####################################
 # Create equal interval bins
-#####################################
-
 def create_bins(global_min, global_max):
 
-    interval = (
-        global_max - global_min
-    ) / 5
-
+    interval = (global_max - global_min) / 5
     bins = [
         global_min,
         global_min + interval,
@@ -166,20 +109,15 @@ def create_bins(global_min, global_max):
         global_min + interval * 4,
         global_max
     ]
-
     print("\nCLASS BREAKS")
     print(bins)
-
     return bins
 
 
 # Map population in tracts
 def map_population(gdf, center_gdf, year, bins):
-
     fig, ax = plt.subplots(figsize=(10, 10))
-
     ax.set_axis_off()
-
     gdf.plot(
         column="population",
         cmap="OrRd",
@@ -192,10 +130,7 @@ def map_population(gdf, center_gdf, year, bins):
         ax=ax
     )
 
-    center_year = center_gdf[
-        center_gdf["year"] == year
-    ]
-
+    center_year = center_gdf[center_gdf["year"] == year]
     center_year.plot(
         ax=ax,
         color="black",
@@ -209,26 +144,16 @@ def map_population(gdf, center_gdf, year, bins):
         fontsize=14,
         fontweight="bold"
     )
-
     plt.tight_layout()
 
-    output_path = Path(
-        f"../results/figures/population_tract_{year}.png"
-    )
-
+    output_path = Path(f"../results/figures/population_tract_{year}.png")
     output_path.parent.mkdir(parents=True, exist_ok=True)
 
     plt.savefig(output_path, dpi=300, bbox_inches="tight")
     plt.close()
 
-    #plt.show()
-
-
-
-
 
 years = [2000, 2010, 2015, 2020, 2024]
-
 gdfs = {}
 population_centers = []
 
@@ -249,32 +174,21 @@ for year in years:
     gdf = gdfs[year]
     map_population(gdf, center_gdf, year, bins)
 
-
-
-
-
-from PIL import Image
-from pathlib import Path
-
+# Animation creation 
 # folder containing saved maps
 image_dir = Path("../results/figures")
 
 # ordered image list
 years = [2000, 2010, 2015, 2020, 2024]
-
 images = []
 
 for year in years:
-
     img_path = image_dir / f"population_tract_{year}.png"
-
     img = Image.open(img_path)
-
     images.append(img)
 
 # save GIF
 gif_path = image_dir / "population_shift_animation.gif"
-
 images[0].save(
     gif_path,
     save_all=True,
@@ -282,7 +196,6 @@ images[0].save(
     duration=2000,   # milliseconds per frame
     loop=0
 )
-
 print("GIF animation saved!")
 
 
