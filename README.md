@@ -51,15 +51,33 @@ The project combines:
 
 ## Outputs
 
-### Choropleth Maps
+### Animation of Population Centers with Choropleth Maps 
+This animation visualizes tract-level population distribution changes across Kootenai County from 2000 to 2024. Choropleth maps use a standardized classification scheme and global population range to ensure comparability across years. The black point represents the yearly population-weighted center.
 
-(Add image later)
-
-### Population Center Shift
-
-(Add image later)
+![Population Map Animation](README_assets/population_shift_animation.gif)
 
 ---
+### Population Ranges
+To maintain temporal consistency across choropleth maps:
+
+- Population ranges were calculated for each study year
+- A global minimum and maximum population range was derived across all years
+- Equal-interval classification bins were applied consistently to all maps
+
+![Population Ranges](README_assets/population_ranges.png)
+
+---
+
+### Population Center Shift
+This figure shows the spatial movement of the population-weighted center across study years. Results indicate a gradual shift in population distribution over time. From 2000 to 2010, the population center moved northwest by approximately 1 km. From 2010 to 2024, the population center gradually shifted south and west, with a total movement of roughly 1 km over the period. Distances between consecutive population centers were also exported as tabular outputs for additional spatial analysis.
+
+
+
+![Population Center Shift](README_assets/population_center_shift.png)
+
+---
+
+
 
 ## Technical Components
 
