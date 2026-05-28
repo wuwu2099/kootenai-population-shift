@@ -26,3 +26,21 @@ results/figures/*.jpg
 # OS files
 .DS_Store
 Thumbs.db
+
+# Raw GIS data
+data/raw/
+
+# Processed GIS data
+data/processed/
+
+# Shapefiles
+*.shp
+*.dbf
+*.shx
+*.prj
+*.cpg
+*.sbn
+*.sbx
+
+# Zip files
+*.zip
