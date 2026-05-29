@@ -79,6 +79,15 @@ This figure shows the spatial movement of the population-weighted center across 
 
 
 
+## Summary
+Kootenai County’s population has experienced substantial growth since 2000. In particular, between 2015 and 2020, the county added nearly 30,000 residents, roughly equivalent to the total growth observed during the entire 2000 - 2010 decade. After 2020, the growth rate has slowed, although the population continues to increase.
+
+In terms of spatial distribution, the direction of population shift has changed over time. From 2000 to 2010, there was a clear northeastward movement, while in the following years, the population shift reversed toward the west. The initial northeastward expansion was associated with amenity-driven migration, where residents were attracted by natural landscapes and environmental quality. In contrast, the later westward shift was influenced by stronger economic and urban pull factors from the Spokane Valley and Spokane areas, including employment opportunities and housing availability.
+
+---
+
+
+
 ## Technical Components
 
 - Census API integration

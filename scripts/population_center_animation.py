@@ -42,25 +42,27 @@ def create_pop_center_dataframe(population_centers):
 
 # Calculate population ranges
 def calculate_population_ranges(gdfs):
-
     yearly_ranges = {}
-
     global_min = float("inf")
     global_max = float("-inf")
 
     # Calculate yearly ranges
     for year, gdf in gdfs.items():
-
         year_min = gdf["population"].min()
         year_max = gdf["population"].max()
+        total_pop = gdf["population"].sum()
 
         yearly_ranges[year] = {
             "year": year,
             "min_population": year_min,
-            "max_population": year_max
+            "max_population": year_max,
+            "total_population": total_pop
         }
 
-        print(f"{year}: min={year_min}, max={year_max}")
+        print(
+            f"{year}: min={year_min}, max={year_max}, "
+            f"total={total_pop}"
+        )
 
         # Update global range
         global_min = min(global_min, year_min)
@@ -69,10 +71,8 @@ def calculate_population_ranges(gdfs):
     print("\nGLOBAL RANGE")
     print(f"min={global_min}, max={global_max}")
 
-
     # Convert to dataframe
     range_df = pd.DataFrame(yearly_ranges.values())
-
 
     # Add global range row
     global_row = pd.DataFrame([{
@@ -85,7 +85,6 @@ def calculate_population_ranges(gdfs):
         [range_df, global_row],
         ignore_index=True
     )
-
 
     # Save results
     output_path = Path("../results/population_ranges.csv")
